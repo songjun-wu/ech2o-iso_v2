@@ -129,10 +129,11 @@ int Basin::SolveCanopyFluxes(Atmosphere &atm, Control &ctrl, Tracking &trck) {
 	   theta_MW1, theta_MW2, dth1, dth2, dth3)		\
   shared(nsp, atm, ctrl, trck, dt, thre, std::cout)
 
+
   {
     thre = omp_get_num_threads();
-#pragma omp single
-    printf("\nnum threads %d: \n", thre);
+//#pragma omp single
+//    printf("\nnum threads %d: \n", thre);
 #pragma omp for nowait
     for (unsigned int j = 0; j < _vSortedGrid.cells.size(); j++) {
 
@@ -497,6 +498,9 @@ int Basin::SolveCanopyFluxes(Atmosphere &atm, Control &ctrl, Tracking &trck) {
 	trck.setAgecanopy_sum(r, c, _CanopyStorage->matrix[r][c] > RNDOFFERR ? 
 			      Agecanopy_f / _CanopyStorage->matrix[r][c] : 0); 
       }
+	//if (j==0){
+	//	cout<<theta <<" "<<theta2<<" "<<theta3<< " ";
+	//}
    
     }//end for
   }//end omp parallel

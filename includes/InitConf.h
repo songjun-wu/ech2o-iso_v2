@@ -39,6 +39,7 @@ struct Control{
   string path_BasinFolder; //folder where basin property maps are located
   string path_ClimMapsFolder; //folder where weather maps series are located
   string path_ResultsFolder; //folder where results will be placed
+  string path_ResultstmpFolder;
   
   /*Time control variables*/
   
@@ -58,7 +59,9 @@ struct Control{
   string ForestStateVarsInputType; //indicates if the forest state variables are input as tables (tables) or maps (maps)
   
   /*Option switches*/
-  bool sw_veg_dyn; //switch to turn on and off the dynamic vegetation module (allocation and lai calculation)
+  int sw_veg_dyn; //switch to turn on and off the dynamic vegetation module (allocation and lai calculation)
+  string fn_LAI_timeseries; //LAI time series
+
   bool sw_reinfilt; //switch to turn on and off the reinfiltration option
   bool sw_channel; //switch to turn on and off the channel option
   bool sw_chan_evap; //switch to turn on and off the channel evaporation processes
@@ -186,6 +189,10 @@ struct Control{
   bool Rep_Field_Capacity_L1;
   bool Rep_Field_Capacity_L2;
   bool Rep_Field_Capacity_L3;
+  bool Rep_Wilting_Point;
+  bool Rep_porosity_L1;
+  bool Rep_porosity_L2;
+  bool Rep_porosity_L3;
   bool Rep_Soil_Sat_Deficit;
   bool Rep_GWater;
   bool Rep_Soil_Net_Rad;

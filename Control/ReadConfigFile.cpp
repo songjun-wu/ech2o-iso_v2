@@ -65,7 +65,16 @@ int Control::ReadConfigFile(string confilename /*= "config.ini"*/)
 	if(stat(path_ResultsFolder.c_str(), &info)!=0)
 		throw std::runtime_error(string("Folder not found: ") + path_ResultsFolder);
 
-	sw_veg_dyn = Config.read<bool>("Vegetation_dynamics");
+	Config.readInto(path_ResultstmpFolder, "Output_tmp_Folder");
+	if(path_ResultstmpFolder.at(path_ResultstmpFolder.length()-1) != '/')
+		path_ResultstmpFolder.append("/");
+	if(stat(path_ResultstmpFolder.c_str(), &info)!=0)
+		throw std::runtime_error(string("Folder not found: ") + path_ResultstmpFolder);
+
+	sw_veg_dyn = Config.read<int>("Vegetation_dynamics");
+	if(sw_veg_dyn == 2){
+      Config.readInto(fn_LAI_timeseries, "TimeSeries_LAI");
+    }
 	sw_reinfilt = Config.read<bool>("Reinfiltration");
 	sw_channel = Config.read<bool>("Channel");
     sw_chan_evap = Config.read<bool>("Channel_Evaporation");
@@ -235,6 +244,10 @@ int Control::ReadConfigFile(string confilename /*= "config.ini"*/)
 	Rep_Field_Capacity_L1 = Config.read<bool>("Report_Field_Capacity_L1");
 	Rep_Field_Capacity_L2 = Config.read<bool>("Report_Field_Capacity_L2");
 	Rep_Field_Capacity_L3 = Config.read<bool>("Report_Field_Capacity_L3");
+	Rep_Wilting_Point = Config.read<bool>("Report_Wilting_Point");
+	Rep_porosity_L1 = Config.read<bool>("Report_porosity_L1");
+	Rep_porosity_L2 = Config.read<bool>("Report_porosity_L2");
+	Rep_porosity_L3 = Config.read<bool>("Report_porosity_L3");
 	Rep_Soil_Sat_Deficit = Config.read<bool>("Report_Soil_Sat_Deficit");
 	Rep_GWater = Config.read<bool>("Report_Ground_Water");
 	Rep_Total_ET = Config.read<bool>("Report_Total_ET");

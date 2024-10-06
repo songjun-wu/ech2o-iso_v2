@@ -37,10 +37,10 @@
 
 //Map write defines
 #define WriteMapSeries(_var, _s, _tscount)  \
-     _var->grid2PCRMap( (oControl->path_ResultsFolder + ParseString(_s, _tscount)).c_str(), CR_REAL4, VS_SCALAR);
+     _var->grid2PCRMap( (oControl->path_ResultsFolder + _s + to_string(_tscount)).c_str(), CR_REAL4, VS_SCALAR);
 
 #define WriteMap(_var, _s) \
-     _var->MatrixToMap((pathout + _s).c_str(), CR_REAL4, VS_SCALAR);
+     _var->grid2PCRMap((oControl->path_ResultsFolder +_s+".map").c_str(), CR_REAL4, VS_SCALAR);
 
 struct Report{
 
@@ -53,8 +53,10 @@ struct Report{
 	int ReportVectCells(const vectCells *input, string filename, float timestep);
 	int RenameFile(string oldname);
 	//netcdf format output --yangx 2021-02
-	int UpdateOutputNC(const grid *input, string varname, string outTP);
-	int CreatALLOutputNC(string filepath, string outTP); //FOR EXTERNAL COUPLING 2022-01
-	int CreatOutputNC(string filepath, string outTP);
+	//int UpdateOutputNC(const grid *input, string varname, string outTP);
+	//int CreatALLOutputNC(string filepath, string outTP); //FOR EXTERNAL COUPLING 2022-01
+	int CreatALLOutputBin(string filepath);
+	int UpdateOutputBin(const grid *input, string varname, string filepath);
+	//int CreatOutputNC(string filepath, string outTP);
 };
 #endif /* REPORT_H_ */

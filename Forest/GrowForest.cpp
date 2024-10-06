@@ -114,7 +114,7 @@ int Forest::GrowForest(Basin &bas, const Atmosphere &atm, const Control &ctrl) {
       _species[j]._NPP->matrix[r][c] = _species[j]._GPP->matrix[r][c]
 	* _species[j].GPP2NPP;
 
-      if(ctrl.sw_veg_dyn){
+      if(ctrl.sw_veg_dyn == 1){
 	if (_species[j].is_grass)
 	  GrowGrass(j, r, c, dt);
 	else

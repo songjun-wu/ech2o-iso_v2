@@ -54,25 +54,9 @@ Basin::Basin(Control &ctrl)
     _ldd = new grid(ctrl.path_BasinFolder + ctrl.fn_ldd, ctrl.MapType);
 
     printf("Checking if file %s exists...\n", (ctrl.path_BasinFolder + ctrl.fn_dem + ".serialized.svf").c_str());
-    /*
-     * Checks if there is a _vSordtedGrid object with the correct name in the spatial folder
-     */
-    if (access((ctrl.path_BasinFolder + ctrl.fn_dem + ".serialized.svf").c_str(), F_OK) != -1) {
-      printf("File Found!. Loading object...\n");
-      loadSortedGrid(_vSortedGrid, (ctrl.path_BasinFolder + ctrl.fn_dem + ".serialized.svf").c_str());
-    }
-    else{
-      printf("File not found!. Initializing and sorting grid...\n");
-      printf("WARNING -- if the progress bar stalls for too long, please consider checking your DEM map: it should\n");
-      printf("contain a buffer of at least 1 cell of no-data (mv) around the valid domain (see documentation) --\n");
-      /*sorts the basin with data cells according
-       * to the ldd after _DEM and _ldd have been created*/
-      _vSortedGrid = Basin::SortGridLDD();
 
-      printf("Sorting done. Saving serialized sorted grid object for subsequent runs...\n");
-
-      saveSortedGrid(_vSortedGrid, (ctrl.path_BasinFolder + ctrl.fn_dem + ".serialized.svf").c_str());
-    }
+    // Sort DEM
+    _vSortedGrid = Basin::SortGridLDD();
 
     fForest = new Forest(ctrl); //constructs the Forest object
 
@@ -111,6 +95,7 @@ Basin::Basin(Control &ctrl)
     //_Kroot = new grid(ctrl.path_BasinFolder + ctrl.fn_Kroot, ctrl.MapType);
 
     _snow = new grid(ctrl.path_BasinFolder + ctrl.fn_swe, ctrl.MapType);
+    _snow_old = new grid(ctrl.path_BasinFolder + ctrl.fn_swe, ctrl.MapType);
     _albedo = new grid(ctrl.path_BasinFolder + ctrl.fn_albedo, ctrl.MapType);
     _emiss_surf = new grid(ctrl.path_BasinFolder + ctrl.fn_emiss, ctrl.MapType);
     _soil_dry_heatcap = new grid(ctrl.path_BasinFolder + ctrl.fn_soilheatcap, ctrl.MapType);
@@ -165,6 +150,7 @@ Basin::Basin(Control &ctrl)
     _soilmoist_av = new grid(*_DEM); //average volumetric soil moisture of the first 10 cm of the soil as calculated using a hydrstatic equilibrium moisture profile
     _soilmoist_12 = new grid(*_DEM); //average volumetric soil moisture of the upper two layers
     _ponding = new grid(*_DEM);
+    _ponding_before_infiltration = new grid(*_DEM);
     _infilt_cap = new grid(*_DEM); //infilt cap m h-1
     _AccumInfilt = new grid(*_DEM); //accumulated infiltration in meters
     _Evaporation = new grid(*_DEM); //actual evaporation in m s-1
@@ -380,6 +366,8 @@ Basin::Basin(Control &ctrl)
 	delete _ldd;
       if(_snow)
 	delete _snow;
+      if(_snow_old)
+	delete _snow_old;
       if(_Rn)
 	delete _Rn;
       if(_Rn_sum)
@@ -410,6 +398,8 @@ Basin::Basin(Control &ctrl)
 	delete _Temp_d;
       if(_ponding)
 	delete _ponding;
+      if(_ponding_before_infiltration)
+	delete _ponding_before_infiltration;
       if(_Ksat0)
 	delete _Ksat0;
       if(_kKsat)

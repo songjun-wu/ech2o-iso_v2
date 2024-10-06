@@ -29,9 +29,15 @@
  */
 
 #include "Forest.h"
+#include <errno.h>
+#include <string.h>
 
 Forest::Forest(Control &ctrl)
 {
+
+	stringstream fn;
+	errno = 0;
+	
 	try{
 
 	//Read the base map and writes the dimensions of the grid
@@ -56,6 +62,20 @@ Forest::Forest(Control &ctrl)
 				_species[i].CreateGridsd18O(_patches);
 			if(ctrl.sw_trck && ctrl.sw_Age)
 				_species[i].CreateGridsAge(_patches);
+
+			if(i < _Nsp - 1 and ctrl.sw_veg_dyn == 2){
+			// Read file
+			fn.str(""); fn << ctrl.fn_LAI_timeseries << "_" << i << ".bin";
+			try{
+			_species[i].ifLAI.open((ctrl.path_ClimMapsFolder + fn.str()).c_str(), ios::binary);
+			if(errno!=0) throw fn.str();
+			} catch (string e) {
+			cout << "Dang!!: cannot find/read the " << e << "  file: error " << strerror(errno) << endl;
+			throw;
+			}
+			//Initiate LAI map
+			InitiateLAIMap(_species[i].ifLAI, *_species[i]._LAI);
+			}
 		}
 
 		SetSpeciesParameters(ctrl);

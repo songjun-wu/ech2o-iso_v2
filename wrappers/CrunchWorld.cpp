@@ -53,5 +53,9 @@ int CrunchWorld(){
 	if(ofSummary.is_open())
 		ofSummary.close();
 
+	if(ofOutput.is_open())
+		ofOutput.close();
+
+
 	return EXIT_SUCCESS;
 }

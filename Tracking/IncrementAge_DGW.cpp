@@ -64,7 +64,7 @@ int Tracking::IncrementAge_DGW(Basin &bsn, Control &ctrl){
       _Agegroundwater->matrix[r][c] = bsn.getGrndWater()->matrix[r][c] > RNDOFFERR ?
 	_Agegroundwater->matrix[r][c] + dt : 0.0; // Groundwater
       //
-	  _AgeExtraGWtoLat->matrix[r][c] = _AgeExtraGWtoLat->matrix[r][c] + dt; //Extra GW
+	  //_AgeExtraGWtoLat->matrix[r][c] = _AgeExtraGWtoLat->matrix[r][c] + dt; //Extra GW
 
       if(ctrl.sw_TPD){
 	_Age_TB1->matrix[r][c] += dt; // Mobile water layer 1

@@ -30,7 +30,7 @@
 
 #ifndef GROVE_H_
 #define GROVE_H_
-
+#include <fstream>
 #include "Grid.h"
 
 struct Grove {
@@ -109,6 +109,9 @@ struct Grove {
 	grid *_LeafWatPot; // leaf water potential (positive m of head)
   grid *_rootfrac1; // root fraction in first layer
   grid *_rootfrac2; // root fraction in second layer
+
+    ifstream ifLAI; // LAI files handle
+    ifstream ifhgt; // hgt files handle
 
 	// Tracking
 	grid *_d2Hcanopy; // d2H of interception water

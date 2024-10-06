@@ -53,14 +53,14 @@ void Basin::KinematicWave(REAL8 &Qk1, REAL8 &S,  REAL8 &Qij1,  REAL8 &qall,  REA
   //yangx 2020-11
   //take account the input channel length
   chanlength = _channellength->matrix[r][c]; //actual channel length
-  dtdx = dt/chanlength;
+  dtdx = dt/_dx;
   qall = qall/chanlength;  //convert back to [m2/s] original coding in GWrougting.cpp
   
   if(qall*chanlength+Qij1 > 0){ //if there is water to route
     sqrtS = powl(_slope->matrix[r][c], 0.5);
     
     w = _channelwidth->matrix[r][c];
-    n = _Manningn->matrix[r][c];
+    n = _Manningn->matrix[r][c] * chanlength;
     a = powl(powl(w,0.67)*n/sqrtS, 0.6); //wetted perimeter is approximated with channel width
     //initial guess through solution of linear kw
     REAL8 avQ = 0.5*(Qij1);

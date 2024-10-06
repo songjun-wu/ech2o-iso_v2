@@ -59,7 +59,7 @@ all: ech2o_iso
 ech2o_iso: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -fopenmp -o "ech2o_iso" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -ggdb -L"../lib" -fopenmp -o "ech2o_iso" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
@@ -70,7 +70,7 @@ clean:
 	-@echo ' '
 
 post-build:
-	-strip ech2o_iso
+#	-strip ech2o_iso
 	-@echo ' '
 
 .PHONY: all clean dependents

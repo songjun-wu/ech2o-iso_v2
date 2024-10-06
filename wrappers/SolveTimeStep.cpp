@@ -34,7 +34,6 @@
 int SolveTimeStep(){
 
   oBasin->SolveCanopyFluxes(*oAtmosphere, *oControl, *oTracking);
-  cout << "createworld\n ";
   oBasin->SolveSurfaceFluxes(*oAtmosphere, *oControl, *oTracking);
   oBasin->CalculateGrowForest(*oAtmosphere, *oControl);
   oBasin->DailyGWRouting(*oAtmosphere, *oControl, *oTracking);

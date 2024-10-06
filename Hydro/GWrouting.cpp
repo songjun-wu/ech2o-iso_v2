@@ -159,25 +159,17 @@ int Basin::DailyGWRouting(Atmosphere &atm, Control &ctrl, Tracking &trck) {
       Rponding = 0;
       chan_store = 0;
       benthic_area = 0;
-      //a proportion of surface flow goes to river, estimated by the relative lengths of channel and grid size
-      if (ctrl.sw_channel && _channellength->matrix[r][c] > 0) {
-        pro_srfrnoff = _channellength->matrix[r][c] / (_dx + _channellength->matrix[r][c]);
-        benthic_area = _channellength->matrix[r][c] * _channelwidth->matrix[r][c];
-      }
+      
 	  //if reinfiltration switch is on is not a channel cell or the channel switch is off
 	  //if (ctrl.sw_reinfilt && !(ctrl.sw_channel && _channelwidth->matrix[r][c] > 0)){
       if (ctrl.sw_reinfilt){
         //if its the channel cells, the part of ponding storage that goes to river dosen't reinfiltrate again
-        if (_channellength->matrix[r][c] > 0 && ctrl.sw_partial_reinf){
-          srfrnoff = ponding * pro_srfrnoff; //get the direct overland flows
-          Rponding = ponding - srfrnoff;
-		  Infilt_GreenAmpt(ctrl, f, F, theta1, theta2, theta3, Rponding, gw, dt, r, c, 1);	
-        } else {
+
+		  
+		  Infilt_GreenAmpt(ctrl, f, F, theta1, theta2, theta3, ponding, gw, dt, r, c, 1);
 		  Rponding = ponding ;
-		  Infilt_GreenAmpt(ctrl, f, F, theta1, theta2, theta3, Rponding, gw, dt, r, c, 1);
-          srfrnoff = Rponding * pro_srfrnoff; //=0 if it's not the channel cell
-          Rponding = Rponding -	srfrnoff;	  
-		}
+          srfrnoff = ponding;  
+		
   
 		// Store time-step- and cumulated- infitlration flux (only if there is reinfiltration)
 	    //_FluxInfilt->matrix[r][c] += _FluxSrftoL1->matrix[r][c];
@@ -206,7 +198,10 @@ int Basin::DailyGWRouting(Atmosphere &atm, Control &ctrl, Tracking &trck) {
         // just to update surface ponding tracer signals
 	      trck.MixingV_down(*this, ctrl, d1, d2, d3, fc, leak_depth, r, c, 1);
 	    }
-      }		  
+      }
+
+	  _ponding_before_infiltration->matrix[r][c] = _ponding->matrix[r][c];
+
 	  // For the rest of the routine, theta3 is only the content of the non-saturated
 	  // part of L3
 	  if (theta3 > fc) {
@@ -299,6 +294,7 @@ int Basin::DailyGWRouting(Atmosphere &atm, Control &ctrl, Tracking &trck) {
 	  
 	  //Extra GW terrestrial dynamics yangx 2020-05
 	  if (ctrl.sw_extraGW){
+		_ExtraGW->matrix[r][c] = 3;  //here we use constant ExtraGW storage; todo
 		extragw_all = _ExtraGW->matrix[r][c];
 		ex_Fhydro = _Hydrofrac_ExtraGW->matrix[r][c];
 		//hydrologically active part only
@@ -385,6 +381,7 @@ int Basin::DailyGWRouting(Atmosphere &atm, Control &ctrl, Tracking &trck) {
 		
 		
         chan_store = 0;
+		Rponding = 0;
 	    
 	  }	  
 
@@ -565,7 +562,8 @@ int Basin::DailyGWRouting(Atmosphere &atm, Control &ctrl, Tracking &trck) {
 	  _soilmoist3->matrix[r][c] = theta3 + hj1i1 / d3;
 	  _GrndWater->matrix[r][c] = hj1i1;
 	  if (ctrl.sw_extraGW)
-        _ExtraGW->matrix[r][c] = ex_hj1i1 + extragw_all*(1-ex_Fhydro);
+        //_ExtraGW->matrix[r][c] = ex_hj1i1 + extragw_all*(1-ex_Fhydro);
+		_ExtraGW->matrix[r][c] = 3; //here we use constant level; todo
 	  // Save river discharge
 	  _Disch_old->matrix[r][c] = Qk1;
 	  Qk1 = 0;
@@ -577,6 +575,10 @@ int Basin::DailyGWRouting(Atmosphere &atm, Control &ctrl, Tracking &trck) {
 	  if (ctrl.sw_extraGW)
 	    ExtraGWDynamics(ctrl, trck, lat_ok, dt, r, c)
  */
+ 	if (_FluxSrftoL1_r->matrix[r][c]<0) _FluxSrftoL1_r->matrix[r][c] = 0;
+ 	if (_FluxL1toL2_r->matrix[r][c]<0) _FluxL1toL2_r->matrix[r][c] = 0;
+	if (_FluxL2toL3_r->matrix[r][c]<0) _FluxL2toL3_r->matrix[r][c] = 0;
+
 	}
 	
 	// Save previous GW and surface state

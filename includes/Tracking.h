@@ -126,7 +126,7 @@ class Tracking {
   void MixingV_evapW(Atmosphere &atm, Basin &bsn, Control &ctrl, 
 		     double Tw, double evap, double chan_store, int r, int c);
   
-  void MixingV_snow(Atmosphere &atm, Basin &bsn, Control &ctrl, double &h, double &dh, int r, int c);
+  void MixingV_snow(Atmosphere &atm, Basin &bsn, Control &ctrl, double &h, double &h0, double &dh, int r, int c);
   
   void MixingV_through(Atmosphere &atm, Basin &bsn, Control &ctrl, double &rain, double &p, int r, int c);
   

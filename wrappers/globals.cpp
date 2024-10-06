@@ -39,3 +39,4 @@ Tracking *oTracking  = NULL;
 
 ofstream ofSummary;
 ofstream ofAgeSummary;
+ofstream ofOutput;

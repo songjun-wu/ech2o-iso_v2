@@ -33,10 +33,12 @@
 double Basin::SnowOutput(Atmosphere &atm, Control &ctrl, Tracking &trck,
 			 const double &meltheat, int row, int col) {
 
-	double h = 0; // depth of snow water equivalent
+	double h = 0; // depth of snow water equivalent at current timestep
+	double h0 = 0; // depth of snow water equivalent at previous timestep
 	double dh = 0; // depth of snow output - decrease in snow water equivalent depth
 
 	h = _snow->matrix[row][col] < RNDOFFERR ? 0.0 : _snow->matrix[row][col];
+	h0 = _snow_old->matrix[row][col] < RNDOFFERR ? 0.0 : _snow_old->matrix[row][col];
 	
 	_snow->matrix[row][col] = h;
 	
@@ -55,7 +57,7 @@ double Basin::SnowOutput(Atmosphere &atm, Control &ctrl, Tracking &trck,
 	    
 	// Flux tracking after snowmelt
 	if(ctrl.sw_trck)
-	  trck.MixingV_snow(atm, *this, ctrl, h, dh, row, col);
+	  trck.MixingV_snow(atm, *this, ctrl, h, h0, dh, row, col);
 	//snowmelt flux
 	_FluxSnowtoSrf->matrix[row][col] = dh;    
 

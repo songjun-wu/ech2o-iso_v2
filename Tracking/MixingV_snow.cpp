@@ -31,7 +31,7 @@
 #include "Basin.h"
 
 void Tracking::MixingV_snow(Atmosphere &atm, Basin &bsn, Control &ctrl,
-			    double &h, double &dh, int r, int c) //time step
+			    double &h, double &h0, double &dh, int r, int c) //time step
 {
   
   double h_eff; // Effective SWE used for mixing
@@ -39,11 +39,11 @@ void Tracking::MixingV_snow(Atmosphere &atm, Basin &bsn, Control &ctrl,
 
   // - in snowpack (snowfall in + snowmelt out), 
   // considering that snowmelt "flushes" the most recent snowfall first, without mixing
-  if(abs(h) < RNDOFFERR){
+  if(abs(h0) < RNDOFFERR){
     if(ctrl.sw_2H)
-      _d2Hsnowpack->matrix[r][c] = -1000;
+      _d2Hsnowpack->matrix[r][c] = atm.getd2Hprecip()->matrix[r][c];
     if(ctrl.sw_18O)
-      _d18Osnowpack->matrix[r][c] = -1000;
+      _d18Osnowpack->matrix[r][c] = atm.getd18Oprecip()->matrix[r][c];
     if(ctrl.sw_Age)
       _Agesnowpack->matrix[r][c] = 0.0;
   }

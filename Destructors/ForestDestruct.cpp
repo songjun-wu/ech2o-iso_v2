@@ -39,6 +39,9 @@ Forest::~Forest(){
 	if(_species)
 		delete[] _species;
 
+	if(ifLAI.is_open())
+	         ifLAI.close();
+
 
 
 

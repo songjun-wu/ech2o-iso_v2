@@ -256,6 +256,5 @@ void Basin::Infilt_GreenAmpt(Control &ctrl, double &f, double &F, double &theta,
   }
 
   gw = max<double>(0,(theta3 - fc3) * depth3);
-  printf("infiltration capacity: %.2f \n", _infilt_cap->matrix[r][c]);
 
 }

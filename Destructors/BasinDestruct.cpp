@@ -38,6 +38,8 @@ Basin::~Basin(){
 		delete _ldd;
 	if(_snow)
 		delete _snow;
+	if(_snow_old)
+		delete _snow_old;
 	if(_Rn)
 		delete _Rn;
 	if(_Rn_sum)
@@ -68,6 +70,8 @@ Basin::~Basin(){
 		delete _Temp_d;
 	if(_ponding)
 		delete _ponding;
+	if(_ponding_before_infiltration)
+		delete _ponding_before_infiltration;
 	if(_Ksat0)
 		delete _Ksat0;
 	if(_kKsat)

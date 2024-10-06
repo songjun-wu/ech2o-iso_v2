@@ -309,13 +309,13 @@ void Basin::CheckMaps(Control &ctrl) {
       if (_soilmoist2->matrix[r][c] > _porosityL2->matrix[r][c]) {
 	string e("WARNING: Initial soil moisture in layer 2 is larger than porosity, let's bring it down...\n");
 	cout << e;
-	_soilmoist1->matrix[r][c] = (_theta_r->matrix[r][c] + 3*_porosityL1->matrix[r][c]) / 4;
+	_soilmoist2->matrix[r][c] = (_theta_r->matrix[r][c] + 3*_porosityL2->matrix[r][c]) / 4;
 	//throw e;
       }
       if (_soilmoist3->matrix[r][c] > _porosityL3->matrix[r][c]) {
 	string e("WARNING: Initial soil moisture in layer 3 is larger than porosity, let's bring it down...\n");
 	cout << e;
-	_soilmoist1->matrix[r][c] = (_theta_r->matrix[r][c] + 3*_porosityL1->matrix[r][c]) / 4;
+	_soilmoist3->matrix[r][c] = (_theta_r->matrix[r][c] + 3*_porosityL3->matrix[r][c]) / 4;
 	//throw e;
       }
       if (_channelwidth->matrix[r][c] < 0) {

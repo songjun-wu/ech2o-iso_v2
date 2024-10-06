@@ -32,6 +32,23 @@
 
 int Report2Maps(){
 
+  if (oControl->GetTimeStepCount()==1){
+    if (oControl->Rep_Field_Capacity_L1) 
+	    WriteMap(oBasin->getFieldCapacityL1(), "FCap0");
+    if (oControl->Rep_Field_Capacity_L2)
+	    WriteMap(oBasin->getFieldCapacityL2(), "FCap1");
+    if (oControl->Rep_Field_Capacity_L3)
+	    WriteMap(oBasin->getFieldCapacityL3(), "FCap2");
+    if (oControl->Rep_Wilting_Point)
+	    WriteMap(oBasin->getWiltingPoint(), "WiltingPoint");
+    if (oControl->Rep_porosity_L1)
+	    WriteMap(oBasin->getPorosityL1(), "poros_0");
+    if (oControl->Rep_porosity_L2)
+	    WriteMap(oBasin->getPorosityL2(), "poros_1");
+    if (oControl->Rep_porosity_L3)
+	    WriteMap(oBasin->getPorosityL3(), "poros_2");
+  }
+
   if(oControl->Rep_Long_Rad_Down)
     WriteMapSeries(oAtmosphere->getIncomingLongWave(), "Ldown", oControl->current_ts_count);
   if(oControl->Rep_Short_Rad_Down)
@@ -73,12 +90,7 @@ int Report2Maps(){
     WriteMapSeries(oBasin->getSoilMoist3(), "SWC3_", oControl->current_ts_count);
   if (oControl->Rep_WaterTableDepth)
     WriteMapSeries(oBasin->getWaterTableDepth(), "WTD_", oControl->current_ts_count);
-  if (oControl->Rep_Field_Capacity_L1)
-    WriteMapSeries(oBasin->getFieldCapacityL1(), "FCap1", oControl->current_ts_count);
-  if (oControl->Rep_Field_Capacity_L2)
-    WriteMapSeries(oBasin->getFieldCapacityL2(), "FCap2", oControl->current_ts_count);
-  if (oControl->Rep_Field_Capacity_L3)
-    WriteMapSeries(oBasin->getFieldCapacityL3(), "FCap3", oControl->current_ts_count);
+
   if (oControl->Rep_Soil_Sat_Deficit)
     WriteMapSeries(oBasin->getSaturationDeficit(), "SatDef", oControl->current_ts_count);
   if (oControl->Rep_GWater)
@@ -172,7 +184,7 @@ int Report2Maps(){
   //extra GW yangx 2020-05
   if(oControl->sw_extraGW){
     if (oControl->Rep_BedRock_leakage)
-      WriteMapSeries(oBasin->getBedrockLeakage(), "LeakF", oControl->current_ts_count);	
+      WriteMapSeries(oBasin->getBedrockLeakage(), "Leak", oControl->current_ts_count);	
     if (oControl->Rep_ExtraGWater)
       WriteMapSeries(oBasin->getExtraGW(), "ExtraGW", oControl->current_ts_count);
     if (oControl->Rep_ExtraGWtoChn)

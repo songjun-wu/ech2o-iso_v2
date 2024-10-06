@@ -62,6 +62,7 @@ int Report2Screen(){
 
   // ==== BasinSummary.txt --------------------------------------------------------
   // -----------------------------------------------------
+  /*
   printf("\nTotal Precipitation (m3):  %.2f \t", oBudget->precipitation);
   ofSummary << oBudget->precipitation << "\t";
 
@@ -157,8 +158,10 @@ int Report2Screen(){
     ofAgeSummary << oBudget->Agesrftochn << "\t";
     ofAgeSummary << oBudget->Agegwtochn << "\t";   
     ofAgeSummary << oBudget->Agerecharge << "\n";
-
   }
+  */
+
+  ofSummary << oControl->current_ts_count - 1;
 
   return EXIT_SUCCESS;
 }

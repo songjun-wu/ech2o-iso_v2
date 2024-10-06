@@ -55,10 +55,11 @@ void Tracking::MixingChannel_CRunoffDGW(Basin &bsn, Control &ctrl,
 
   double theta1 = bsn.getSoilMoist1()->matrix[r][c];
   double theta_MW1 = 0;
-  double ratio_theta = 0;
+  double ratio_theta;
 
-  if ( SrfOVFmix == 0){
-    ratio_theta = std::max<double>(0.5,theta1/poros1); //the proportion of dsurface and dsoil1
+  /*if ( SrfOVFmix == 0){
+    //ratio_theta = std::max<double>(0.5,theta1/poros1); //the proportion of dsurface and dsoil1
+    ratio_theta = 0;
   }else{
 	ratio_theta = bsn.getRatioSrfOVF()->matrix[r][c];  
   }
@@ -67,7 +68,8 @@ void Tracking::MixingChannel_CRunoffDGW(Basin &bsn, Control &ctrl,
   if(ctrl.sw_TPD){
     theta_MW1 = bsn.getMoistureMW1()->matrix[r][c];
 	if ( SrfOVFmix == 0){
-      ratio_theta = std::max<double>(0.5,theta_MW1/poros1); //the proportion of dsurface and dsoil1
+      //ratio_theta = std::max<double>(0.5,theta_MW1/poros1); //the proportion of dsurface and dsoil1
+      ratio_theta = 0;
     }else{
 	  ratio_theta = bsn.getRatioSrfOVF()->matrix[r][c];  
     }
@@ -101,6 +103,8 @@ void Tracking::MixingChannel_CRunoffDGW(Basin &bsn, Control &ctrl,
         _AgeSrftoChn->matrix[r][c] =  ratio_theta * _Agesoil1->matrix[r][c] +
 	                                 (1-ratio_theta) * _Agesurface->matrix[r][c];
     }
+    */
+
    /* else {
       if(ctrl.sw_2H)
 	    _d2HSrftoChn->matrix[r][c] = _d2Hsurface->matrix[r][c];

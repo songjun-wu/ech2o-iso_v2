@@ -116,7 +116,9 @@ class Basin {
   grid *_soil_dry_heatcap; //dry soil heat capacity Jm-3C-1
   grid *_soil_dry_thermcond; //dry soil thermal conductivity Wm-1C-1
   grid *_snow; //snow water equivalent in m
+  grid *_snow_old; //snow water equivalent from last time step in m
   grid *_ponding; // water ponding on the soil surface in m
+  grid *_ponding_before_infiltration; // water ponding before infiltration on the soil surface in m
   grid *_infilt_cap; //infilt capacity m s-1
   grid *_IsSaturated; // Saturated locations
   grid *_soilmoist1; // average volumetric soil moisture over layer 1 or over entire soil profile
@@ -375,6 +377,8 @@ class Basin {
 
   int CalcFracMobileWater();
 
+  int AdvanceLAIMaps();
+
   //Getters
 
   REAL8 getCellSize() const {
@@ -472,6 +476,11 @@ class Basin {
   grid *getPondingWater() const {
     return _ponding;
   }
+
+  grid *getPondingWater_before_infiltration() const {
+    return _ponding_before_infiltration;
+  }
+
 
   grid *getChannelWater() const {
     return _chan_store;

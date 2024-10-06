@@ -48,6 +48,7 @@ extern Tracking *oTracking;
 
 extern ofstream ofSummary;
 extern ofstream ofAgeSummary;
+extern ofstream ofOutput;
 
 void Splash(int argc, char* argv[]);
 int CreateWorld(char* argv[]);
@@ -58,6 +59,7 @@ int Report2Maps();
 int Report2Ts();
 int Report2nc();//map output for netcdf format yangx
 int ReportAll2nc(); //report all internal information for external model coupling yangx
+int ReportAll2Bin();
 int CrunchWorld();
 
 

@@ -122,6 +122,7 @@ void Tracking::MixingV_latupDGW(Basin &bsn, Control &ctrl,
     MW1toSrf = L1toSrf;
   }
 
+  /*  # cancel tracer updates in deepGW! by songjun wu 2024.09.17
   // Extra GW --yangx 2020-05
   // update tracer signatures in deepGW flux 
   if(LattoExtraGW > RNDOFFERR){
@@ -168,6 +169,9 @@ void Tracking::MixingV_latupDGW(Basin &bsn, Control &ctrl,
 	  }
     }
   }
+
+  */
+
   // Layer 3 (GW included) --------------------------------------------------------------------
 
   if(LattoGW > RNDOFFERR){  

@@ -57,9 +57,9 @@ int main(int argc, char* argv[]) {
 
 			SolveTimeStep();
             
-			CalculateBudgets();
+			//;
 
-			Report2Screen();
+			//Report2Screen();
 
 			// Report time series
 			report_time += oControl->dt;
@@ -71,23 +71,26 @@ int main(int argc, char* argv[]) {
 			// Report maps
 			reportMap_time += oControl->dt;
 			if (reportMap_time >= oControl->reportMap_times) { //if report time overdue
-			    if(oControl->sw_netcdf){
-				  Report2nc();
-				}else{
-				  Report2Maps(); //report results
-				}
+				Report2Maps(); //report results
 				reportMap_time = 0; //reset the counter
 			}
 
-            // Report for external coupling - yangx
+            // Report for external coupling
 			if(oControl->sw_couple){
-				ReportAll2nc();
+				CalculateBudgets();
+				ReportAll2Bin();
 			}
 
+			if (oControl->sw_veg_dyn == 2){
+				oBasin->AdvanceLAIMaps();
+			}
+
+			/*
 			cout << "\nEnd time step " << oControl->current_ts_count;
 			cout << "\nSimulation time " << oControl->current_t_step
 					<< " seconds (" << oControl->current_t_step / 86400
 					<< " days)\n\n";
+			*/
 
 			oControl->AdvanceTimeStep();
 
@@ -106,7 +109,7 @@ int main(int argc, char* argv[]) {
 		CrunchWorld();
 		return 0;
 	}
-
+	Report2Screen();
 	CrunchWorld();
 	time(&theend);
 	int tot_sec = difftime(theend, start);

@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../Forest/AdvanceLAIMaps.cpp \
 ../Forest/CalculateCanopyConduct.cpp \
 ../Forest/CreateGrids.cpp \
 ../Forest/CreateGridsd2H.cpp \
@@ -16,6 +17,7 @@ CPP_SRCS += \
 ../Forest/GrowRoots.cpp \
 ../Forest/GrowStem.cpp \
 ../Forest/GrowTrees.cpp \
+../Forest/InitiateLAIMap.cpp \
 ../Forest/LatHeatCanopy.cpp \
 ../Forest/MapGetters.cpp \
 ../Forest/NetRadCanopy.cpp \
@@ -23,9 +25,11 @@ CPP_SRCS += \
 ../Forest/SetSpeciesParameters.cpp \
 ../Forest/SetSpeciesStateVars.cpp \
 ../Forest/SetSpeciesStateVarsMaps.cpp \
-../Forest/SolveCanopyEnergyBalance.cpp 
+../Forest/SolveCanopyEnergyBalance.cpp \
+../Forest/UpdateLAIMap.cpp
 
 OBJS += \
+./Forest/AdvanceLAIMaps.o \
 ./Forest/CalculateCanopyConduct.o \
 ./Forest/CreateGrids.o \
 ./Forest/CreateGridsd2H.o \
@@ -38,6 +42,7 @@ OBJS += \
 ./Forest/GrowRoots.o \
 ./Forest/GrowStem.o \
 ./Forest/GrowTrees.o \
+./Forest/InitiateLAIMap.o \
 ./Forest/LatHeatCanopy.o \
 ./Forest/MapGetters.o \
 ./Forest/NetRadCanopy.o \
@@ -45,9 +50,11 @@ OBJS += \
 ./Forest/SetSpeciesParameters.o \
 ./Forest/SetSpeciesStateVars.o \
 ./Forest/SetSpeciesStateVarsMaps.o \
-./Forest/SolveCanopyEnergyBalance.o 
+./Forest/SolveCanopyEnergyBalance.o \
+./Forest/UpdateLAIMap.o
 
 CPP_DEPS += \
+./Forest/AdvanceLAIMaps.d \
 ./Forest/CalculateCanopyConduct.d \
 ./Forest/CreateGrids.d \
 ./Forest/CreateGridsd2H.d \
@@ -60,6 +67,7 @@ CPP_DEPS += \
 ./Forest/GrowRoots.d \
 ./Forest/GrowStem.d \
 ./Forest/GrowTrees.d \
+./Forest/InitiateLAIMap.d \
 ./Forest/LatHeatCanopy.d \
 ./Forest/MapGetters.d \
 ./Forest/NetRadCanopy.d \
@@ -67,14 +75,15 @@ CPP_DEPS += \
 ./Forest/SetSpeciesParameters.d \
 ./Forest/SetSpeciesStateVars.d \
 ./Forest/SetSpeciesStateVarsMaps.d \
-./Forest/SolveCanopyEnergyBalance.d 
+./Forest/SolveCanopyEnergyBalance.d \
+./Forest/UpdateLAIMap.d
 
 
 # Each subdirectory must supply rules for building sources it contributes
 Forest/%.o: ../Forest/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -DCPU_LITTLE_ENDIAN -I"../includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

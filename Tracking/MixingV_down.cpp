@@ -69,6 +69,11 @@ void Tracking::MixingV_down(Basin &bsn, Control &ctrl,
 
   double d_old = 0;
 
+  double ponding = bsn.getPondingWater()->matrix[r][c];
+  double ratio_theta = 0;
+  double poros1 = bsn.getPorosityL1()->matrix[r][c];
+  double tmp_conc;
+
   if(ctrl.sw_Age and step==0){
     _AgeGWtoChn->reset();
     _AgeSrftoChn->reset();
@@ -154,10 +159,22 @@ void Tracking::MixingV_down(Basin &bsn, Control &ctrl,
 
 
   if(step == 0 ){
+
     // Layer 1 ------------------------------------------------------------------------
   
     // If two-pore domain activated, and different groundwater origin (MW2 instead of soil2)
     if(ctrl.sw_TPD and SrftoL1>RNDOFFERR){
+
+	  theta_MW1 = bsn.getMoistureMW1()->matrix[r][c];  // to which extent the ponding water is mixed with soil layer 1 (before infiltration)
+	  if (ctrl.toggle_SrfOVFmix == 1){
+	    ratio_theta = bsn.getRatioSrfOVF()->matrix[r][c];  
+      }
+      else if (ctrl.toggle_SrfOVFmix == 2){
+	    ratio_theta = std::max<double>(0.5,theta_MW1/poros1);
+	  }
+
+
+
       if(ctrl.sw_2H){
 	d_old = _d2H_TB1->matrix[r][c];
 	_d2H_TB1->matrix[r][c] = InputMix(std::min<double>(theta1_old,theta_MW1)*d1, 
@@ -219,18 +236,49 @@ void Tracking::MixingV_down(Basin &bsn, Control &ctrl,
       
       }
     } else if (SrftoL1>RNDOFFERR){ // Soil-averaged
-      if(ctrl.sw_2H)
+
+	if (ctrl.toggle_SrfOVFmix == 1){ // to which extent the ponding water is mixed with soil layer 1 (before infiltration)
+		ratio_theta = bsn.getRatioSrfOVF()->matrix[r][c];  
+	}
+	else if (ctrl.toggle_SrfOVFmix == 2){
+		ratio_theta = std::max<double>(0.5,theta1_old/poros1);
+	}
+
+      if(ctrl.sw_2H){
+	if (ponding>RNDOFFERR){
+		if (theta1_old*d1>ponding*ratio_theta){
+		tmp_conc = _d2Hsurface->matrix[r][c];
+		_d2Hsurface->matrix[r][c] = ratio_theta * _d2Hsoil1->matrix[r][c] +(1-ratio_theta) * tmp_conc;
+		_d2Hsoil1->matrix[r][c] = InOutMix(theta1_old*d1-ponding*ratio_theta, _d2Hsoil1->matrix[r][c], ponding*ratio_theta, tmp_conc, 0, 0);
+		}
+	}
 	_d2Hsoil1->matrix[r][c] = InOutMix(theta1_old*d1, _d2Hsoil1->matrix[r][c],
 					   SrftoL1, _d2Hsurface->matrix[r][c], L1toL2, mixmod);
+	}
     
-      if(ctrl.sw_18O)
+      if(ctrl.sw_18O){
+	if (ponding>RNDOFFERR){
+		if (theta1_old*d1>ponding*ratio_theta){
+		tmp_conc = _d18Osurface->matrix[r][c];
+		_d18Osurface->matrix[r][c] = ratio_theta * _d18Osoil1->matrix[r][c] +(1-ratio_theta) * tmp_conc;
+		_d18Osoil1->matrix[r][c] = InOutMix(theta1_old*d1-ponding*ratio_theta, _d18Osoil1->matrix[r][c], ponding*ratio_theta, tmp_conc, 0, 0);
+		}
+	}
 	_d18Osoil1->matrix[r][c] = InOutMix(theta1_old*d1, _d18Osoil1->matrix[r][c],
 					    SrftoL1, _d18Osurface->matrix[r][c], L1toL2, mixmod);
-    
-      if(ctrl.sw_Age)
+	}
+   
+      if(ctrl.sw_Age){
+	if (ponding>RNDOFFERR){
+		if (theta1_old*d1>ponding*ratio_theta){
+		tmp_conc = _Agesurface->matrix[r][c];
+		_Agesurface->matrix[r][c] = ratio_theta * _Agesoil1->matrix[r][c] +(1-ratio_theta) * tmp_conc;
+		_Agesoil1->matrix[r][c] = InOutMix(theta1_old*d1-ponding*ratio_theta, _Agesoil1->matrix[r][c], ponding*ratio_theta, tmp_conc, 0, 0);
+		}
+	}
 	_Agesoil1->matrix[r][c] = InOutMix(theta1_old*d1, _Agesoil1->matrix[r][c],
-					   SrftoL1, _Agesurface->matrix[r][c], L1toL2, mixmod);
-    
+					   SrftoL1, _Agesurface->matrix[r][c], L1toL2, mixmod);	
+	}
     }
   
     // Layer 2 ------------------------------------------------------------------------

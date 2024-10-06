@@ -98,13 +98,15 @@ int Basin::SolveSurfaceFluxes(Atmosphere &atm, Control &ctrl, Tracking &trck) {
     //extra GW by yangx 2020-05
 	if(ctrl.sw_extraGW)
 	  trck.OutletVals_DGW(*this, ctrl, 0, 0, 0, 0, 0);
-    
+
+
 #pragma omp parallel default(shared) \
   private(r, c, ra, rs, Ts, Tsold, Tdold, LAI, BeersK, Temp_can, emis_can, \
-	  evap, infcap, accinf, theta, theta2, theta3, ponding,leak, \
+	  evap, infcap, accinf, theta, theta2, theta3, ponding, leak, leakdepth, \
 	  gw, za, z0u, zdu, z0o, zdo, wind, treeheight,			\
 	  nr, le, sens, grndh, snowh, mltht, dh_snow, p, etc,		\
 	  d1, d2, d3, fc)
+
   {
     //thre = omp_get_num_threads();
     //#pragma omp single
@@ -264,9 +266,15 @@ int Basin::SolveSurfaceFluxes(Atmosphere &atm, Control &ctrl, Tracking &trck) {
 	_ponding->matrix[r][c] += SnowOutput(atm, ctrl, trck, mltht, r, c);
 	// Back up before routing
 	_GrndWater_old->matrix[r][c] = _GrndWater->matrix[r][c];
+
+	//if (j==0){
+	//	cout<<theta <<" "<<theta2<<" "<<theta3<<endl;
+	//}
 	
-      }//for
+      }//for	
+
   }//end omp parallel block
-  
+
+  *_snow_old = *_snow;  // save snow status
   return EXIT_SUCCESS;
 }
